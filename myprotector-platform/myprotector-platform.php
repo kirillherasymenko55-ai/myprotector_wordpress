@@ -29,10 +29,32 @@ register_activation_hook(__FILE__, function () {
     require_once __DIR__ . '/Core/Activator.php';
     \MyProtector\Core\Activator::activate();
 
-
-    // FIX: Trigger FrontendUI page creation on activation
-    // This runs during plugin activation, before any other hooks
-    do_action('mp_frontend_create_pages');
+    // FIX: Directly create pages during activation without depending on module loading
+    // This bypasses the module system which may not be fully loaded during activation
+    $pages = [
+        'home'      => ['title' => 'MyProtector Home', 'slug' => 'home'],
+        'businesses' => ['title' => 'Businesses', 'slug' => 'businesses'],
+        'login'     => ['title' => 'Login', 'slug' => 'login'],
+        'register'  => ['title' => 'Register', 'slug' => 'register'],
+        'dashboard' => ['title' => 'Dashboard', 'slug' => 'dashboard'],
+        'about'     => ['title' => 'About', 'slug' => 'about'],
+        'contact'   => ['title' => 'Contact', 'slug' => 'contact'],
+    ];
+    
+    foreach ($pages as $key => $page) {
+        $existing = get_page_by_path($page['slug']);
+        if (!$existing) {
+            wp_insert_post([
+                'post_title'   => $page['title'],
+                'post_name'    => $page['slug'],
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+            ]);
+        }
+    }
+    
+    // Flag rewrite rules to be flushed
+    update_option('mp_flush_rewrite_rules', true);
 });
 
 // Register deactivation hook
