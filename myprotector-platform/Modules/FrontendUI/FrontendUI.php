@@ -385,6 +385,11 @@ class FrontendUI extends Module {
      * @return void
      */
     public function boot(): void {
+        // Debug logging
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[MyProtector] FrontendUI: boot() called');
+        }
+        
         // Register hook to create pages on plugin activation
         // The main plugin file triggers 'mp_frontend_create_pages' during activation
         add_action('mp_frontend_create_pages', [$this, 'createPages']);
@@ -431,6 +436,11 @@ class FrontendUI extends Module {
      * @return void
      */
     public function initOnFirstLoad(): void {
+        // Debug logging
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[MyProtector] FrontendUI: initOnFirstLoad() called, _initialized=' . (isset($this->_initialized) ? 'true' : 'false'));
+        }
+        
         // FIX BUG #3: Check for flush flag from activation
         if (get_option('mp_flush_rewrite_rules')) {
             delete_option('mp_flush_rewrite_rules');
@@ -460,6 +470,10 @@ class FrontendUI extends Module {
             $this->setupRouting();
             
             $this->_initialized = true;
+            
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[MyProtector] FrontendUI: setupRouting() completed, _initialized set to true');
+            }
         }
     }
 
@@ -475,6 +489,11 @@ class FrontendUI extends Module {
      * Setup routing
      */
     public function setupRouting(): void {
+        // Debug logging
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[MyProtector] FrontendUI: setupRouting() called');
+        }
+        
         // Register query vars early (priority 0)
         add_filter('query_vars', [$this, 'addQueryVars'], 0);
 
@@ -573,12 +592,17 @@ class FrontendUI extends Module {
             return $content;
         }
         
+        // Debug log for ALL pages
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[MyProtector] overridePageContent: checking page=' . $post->post_name);
+        }
+        
         $page_slugs = ['home', 'businesses', 'login', 'register', 'dashboard', 'about', 'contact'];
         
         if (in_array($post->post_name, $page_slugs)) {
             // Debug log
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[MyProtector] overridePageContent: page=' . $post->post_name . ', loading template');
+                error_log('[MyProtector] overridePageContent: page=' . $post->post_name . ', MATCH! loading template');
             }
             return $this->renderPage($post->post_name);
         }
