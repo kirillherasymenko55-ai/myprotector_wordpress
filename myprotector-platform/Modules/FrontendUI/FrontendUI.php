@@ -555,6 +555,9 @@ class FrontendUI extends Module {
         if (defined('WP_DEBUG') && WP_DEBUG) {
             error_log(sprintf('[MyProtector] FrontendUI: createPages() - %d pages created', $pages_created));
         }
+        
+        // Flag rewrite rules to be flushed on next admin init
+        update_option('mp_flush_rewrite_rules', true);
     }
 
     /**
@@ -588,23 +591,20 @@ class FrontendUI extends Module {
     public function handleTemplateInclude($template) {
         global $wp_query;
         
-        // FIX BUG: Add debug logging to prove query vars are available
+        // FIX: Use get_query_var() to properly access registered query vars
+        $mp_page = get_query_var('mp_page');
+        $mp_slug = get_query_var('mp_slug');
+        
+        // Debug logging
         if (defined('WP_DEBUG') && WP_DEBUG) {
-            $query_vars = $wp_query->query_vars;
             error_log(sprintf(
-                '[MyProtector] FrontendUI: handleTemplateInclude() - query_vars: %s',
-                print_r($query_vars, true)
+                '[MyProtector] FrontendUI: handleTemplateInclude() - mp_page=%s, mp_slug=%s',
+                $mp_page,
+                $mp_slug
             ));
         }
         
-        // Check if our query var is set
-        $mp_page = isset($wp_query->query_vars['mp_page']) ? $wp_query->query_vars['mp_page'] : '';
-        
         if (empty($mp_page)) {
-            // Debug: no mp_page found
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[MyProtector] FrontendUI: No mp_page in query_vars, returning original template');
-            }
             return $template;
         }
         
@@ -629,7 +629,7 @@ class FrontendUI extends Module {
                 nocache_headers();
                 return $template_path;
             } else {
-                // FIX BUG: If template doesn't exist, show an error instead of silently failing
+                // FIX: If template doesn't exist, show an error instead of silently failing
                 if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log(sprintf('[MyProtector] FrontendUI: Template not found: %s', $template_path));
                 }
@@ -686,6 +686,9 @@ class FrontendUI extends Module {
         // Enqueue frontend assets
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueAssets']);
         
+        // Flush rewrite rules on admin init (ensures rules are registered)
+        $this->addAction('admin_init', [$this, 'ensureRewriteRules']);
+        
         // AJAX handlers
         $this->addAction('wp_ajax_mp_open_review_modal', [$this, 'handleReviewModal']);
         $this->addAction('wp_ajax_nopriv_mp_open_review_modal', [$this, 'handleReviewModal']);
@@ -718,6 +721,65 @@ class FrontendUI extends Module {
         // Contact form handler
         $this->addAction('wp_ajax_mp_contact_form', [$this, 'handleContactForm']);
         $this->addAction('wp_ajax_nopriv_mp_contact_form', [$this, 'handleContactForm']);
+    }
+
+    /**
+     * Ensure rewrite rules are registered
+     * Called on admin_init to ensure rewrite rules are registered
+     * 
+     * @return void
+     */
+    public function ensureRewriteRules(): void {
+        // Check if rewrite rules need to be flushed
+        if (get_option('mp_flush_rewrite_rules')) {
+            delete_option('mp_flush_rewrite_rules');
+            add_rewrite_rule(
+                '^dashboard/?$',
+                'index.php?mp_page=dashboard',
+                'top'
+            );
+            add_rewrite_rule(
+                '^business-dashboard/?$',
+                'index.php?mp_page=business-dashboard',
+                'top'
+            );
+            add_rewrite_rule(
+                '^reseller-dashboard/?$',
+                'index.php?mp_page=reseller-dashboard',
+                'top'
+            );
+            add_rewrite_rule(
+                '^businesses/?$',
+                'index.php?mp_page=businesses',
+                'top'
+            );
+            add_rewrite_rule(
+                '^business/([^/]+)/?$',
+                'index.php?mp_page=business&mp_slug=$matches[1]',
+                'top'
+            );
+            add_rewrite_rule(
+                '^login/?$',
+                'index.php?mp_page=login',
+                'top'
+            );
+            add_rewrite_rule(
+                '^register/?$',
+                'index.php?mp_page=register',
+                'top'
+            );
+            add_rewrite_rule(
+                '^about/?$',
+                'index.php?mp_page=about',
+                'top'
+            );
+            add_rewrite_rule(
+                '^contact/?$',
+                'index.php?mp_page=contact',
+                'top'
+            );
+            flush_rewrite_rules();
+        }
     }
 
     /**
