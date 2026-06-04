@@ -438,26 +438,13 @@ class FrontendUI extends Module {
     public function initOnFirstLoad(): void {
         // Debug logging
         if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('[MyProtector] FrontendUI: initOnFirstLoad() called, _initialized=' . (isset($this->_initialized) ? 'true' : 'false'));
+            error_log('[MyProtector] FrontendUI: initOnFirstLoad() called, _initialized=' . ($this->_initialized ? 'true' : 'false'));
         }
         
-        // FIX BUG #3: Check for flush flag from activation
-        if (get_option('mp_flush_rewrite_rules')) {
-            delete_option('mp_flush_rewrite_rules');
-            // Call flush_rewrite_rules() ONCE after all hooks are registered
-            // We do this by setting a flag for the next request
-            set_transient('mp_flush_rules_on_next_request', true, 60);
-        }
-        
-        // Check if we need to flush rewrite rules this request
-        if (get_transient('mp_flush_rules_on_next_request')) {
-            delete_transient('mp_flush_rules_on_next_request');
-            // Add action to flush after WordPress is done loading
-            add_action('shutdown', 'flush_rewrite_rules');
-        }
-        
-        // Initialize models only when WordPress is ready
-        if (!isset($this->_initialized)) {
+        // FIX: Use $this->_initialized directly instead of isset()
+        // $_initialized is declared at class level as `protected $_initialized = false;`
+        // so isset() returns true even before we set it. We need to check the VALUE.
+        if (!$this->_initialized) {
             $this->reviewModel = new ReviewModel();
             $this->businessModel = new BusinessModel();
             $this->trafficService = new TrafficSignalService();
