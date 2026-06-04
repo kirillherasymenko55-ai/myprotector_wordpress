@@ -91,11 +91,14 @@ class Activator {
             terms_url varchar(500),
             promise_page_url varchar(500),
             promise_page_title varchar(255),
-            status enum('pending','claimed','verified','suspended') default 'pending',
+            status enum('pending','approved','rejected','suspended') default 'pending',
             trust_score decimal(3,2) default 0.00,
             total_reviews int(10) unsigned default 0,
             avg_rating decimal(2,1) default 0.0,
             is_featured tinyint(1) default 0,
+            rejection_reason text,
+            approved_by bigint(20) unsigned default 0,
+            approved_at datetime,
             created_at datetime default current_timestamp,
             updated_at datetime default current_timestamp on update current_timestamp,
             PRIMARY KEY  (company_id),
@@ -103,6 +106,29 @@ class Activator {
             KEY idx_status (status),
             KEY idx_category (company_category),
             KEY idx_user (user_id)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Company documents table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_company_documents (
+            document_id bigint(20) unsigned NOT NULL auto_increment,
+            company_id bigint(20) unsigned NOT NULL,
+            document_type enum('insurance_certificate','business_license','incorporation','other') default 'other',
+            document_name varchar(255) NOT NULL,
+            document_url varchar(500) NOT NULL,
+            document_path varchar(500),
+            mime_type varchar(100),
+            file_size int(10) unsigned default 0,
+            is_verified tinyint(1) default 0,
+            verified_by bigint(20) unsigned default 0,
+            verified_at datetime,
+            rejection_reason text,
+            uploaded_by bigint(20) unsigned NOT NULL,
+            created_at datetime default current_timestamp,
+            updated_at datetime default current_timestamp on update current_timestamp,
+            PRIMARY KEY  (document_id),
+            KEY idx_company (company_id),
+            KEY idx_type (document_type)
         ) $charset_collate;";
         dbDelta($sql);
         
@@ -157,35 +183,194 @@ class Activator {
             image_id bigint(20) unsigned NOT NULL auto_increment,
             review_id bigint(20) unsigned NOT NULL,
             image_url varchar(500) NOT NULL,
+            image_path varchar(500),
             image_type enum('review','blacklist_evidence') default 'review',
             caption varchar(255),
             is_approved tinyint(1) default 0,
-            uploaded_at datetime default current_timestamp,
+            uploaded_by bigint(20) unsigned NOT NULL,
+            created_at datetime default current_timestamp,
             PRIMARY KEY  (image_id),
-            KEY idx_review (review_id)
+            KEY idx_review (review_id),
+            KEY idx_uploaded_by (uploaded_by)
         ) $charset_collate;";
         dbDelta($sql);
         
-        // Traffic light status table
-        $sql = "CREATE TABLE {$wpdb->prefix}mp_traffic_light_status (
-            status_id bigint(20) unsigned NOT NULL auto_increment,
+        // Review helpful marks table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_review_helpful (
+            id bigint(20) unsigned NOT NULL auto_increment,
+            review_id bigint(20) unsigned NOT NULL,
+            user_id bigint(20) unsigned NOT NULL,
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (id),
+            UNIQUE KEY unique_mark (review_id, user_id),
+            KEY idx_review (review_id),
+            KEY idx_user (user_id)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Review reports table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_review_reports (
+            report_id bigint(20) unsigned NOT NULL auto_increment,
+            review_id bigint(20) unsigned NOT NULL,
+            user_id bigint(20) unsigned NOT NULL,
+            reason text NOT NULL,
+            ip_address varchar(45),
+            status enum('pending','reviewed','dismissed') default 'pending',
+            reviewed_by bigint(20) unsigned default 0,
+            reviewed_at datetime,
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (report_id),
+            KEY idx_review (review_id),
+            KEY idx_user (user_id),
+            KEY idx_status (status)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Review moderation log table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_review_moderation_log (
+            log_id bigint(20) unsigned NOT NULL auto_increment,
+            review_id bigint(20) unsigned NOT NULL,
+            action varchar(50) NOT NULL,
+            notes text,
+            moderated_by bigint(20) unsigned NOT NULL,
+            ip_address varchar(45),
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (log_id),
+            KEY idx_review (review_id),
+            KEY idx_moderated_by (moderated_by)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // User trust levels table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_user_trust_levels (
+            trust_id bigint(20) unsigned NOT NULL auto_increment,
+            user_id bigint(20) unsigned NOT NULL,
+            trust_level enum('unverified','verified','premium','trusted') default 'unverified',
+            verified_at datetime,
+            verification_method varchar(50),
+            created_at datetime default current_timestamp,
+            updated_at datetime default current_timestamp on update current_timestamp,
+            PRIMARY KEY  (trust_id),
+            UNIQUE KEY idx_user (user_id)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Trust level history table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_trust_level_history (
+            history_id bigint(20) unsigned NOT NULL auto_increment,
+            user_id bigint(20) unsigned NOT NULL,
+            new_level enum('unverified','verified','premium','trusted') NOT NULL,
+            old_level enum('unverified','verified','premium','trusted'),
+            changed_by bigint(20) unsigned default 0,
+            ip_address varchar(45),
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (history_id),
+            KEY idx_user (user_id)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // IP ban list table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_ip_ban_list (
+            ban_id bigint(20) unsigned NOT NULL auto_increment,
+            ip_address varchar(45) NOT NULL,
+            reason text,
+            banned_by bigint(20) unsigned default 0,
+            is_active tinyint(1) default 1,
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (ban_id),
+            UNIQUE KEY idx_ip (ip_address)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Trust signals table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_trust_signals (
+            signal_id bigint(20) unsigned NOT NULL auto_increment,
             company_id bigint(20) unsigned NOT NULL,
-            trust_status enum('walking','shopping','bad') default 'bad',
-            trust_score decimal(5,2) default 0.00,
-            traffic_light_color enum('green','yellow','red') default 'red',
-            requirements_met longtext,
-            requirements_total int default 5,
-            insurance_added tinyint(1) default 0,
-            terms_added tinyint(1) default 0,
-            promise_page_added tinyint(1) default 0,
-            admin_verified tinyint(1) default 0,
-            manual_override tinyint(1) default 0,
+            status enum('green','amber','red') default 'red',
+            calculated_status enum('green','amber','red') default 'red',
+            requirements longtext,
+            is_overridden tinyint(1) default 0,
+            overridden_status enum('green','amber','red'),
             override_reason text,
-            override_by bigint(20) unsigned,
-            last_calculated datetime,
-            calculated_at datetime default current_timestamp,
-            PRIMARY KEY  (status_id),
-            UNIQUE KEY company_id (company_id)
+            overridden_by bigint(20) unsigned default 0,
+            overridden_at datetime,
+            created_at datetime default current_timestamp,
+            updated_at datetime default current_timestamp on update current_timestamp,
+            PRIMARY KEY  (signal_id),
+            UNIQUE KEY idx_company (company_id),
+            KEY idx_status (status),
+            KEY idx_overridden (is_overridden)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Trust signal history table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_trust_signal_history (
+            history_id bigint(20) unsigned NOT NULL auto_increment,
+            company_id bigint(20) unsigned NOT NULL,
+            old_status enum('green','amber','red'),
+            new_status enum('green','amber','red') NOT NULL,
+            change_reason text,
+            changed_by bigint(20) unsigned default 0,
+            is_override tinyint(1) default 0,
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (history_id),
+            KEY idx_company (company_id),
+            KEY idx_created (created_at)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Claims table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_claims (
+            claim_id bigint(20) unsigned NOT NULL auto_increment,
+            company_id bigint(20) unsigned NOT NULL,
+            user_id bigint(20) unsigned NOT NULL,
+            claim_type varchar(50) NOT NULL,
+            claim_amount decimal(10,2) default 0.00,
+            claim_description text,
+            claim_status enum('pending','approved','rejected','resolved') default 'pending',
+            claim_notes text,
+            approved_by bigint(20) unsigned default 0,
+            approved_at datetime,
+            created_at datetime default current_timestamp,
+            updated_at datetime default current_timestamp on update current_timestamp,
+            PRIMARY KEY  (claim_id),
+            KEY idx_company (company_id),
+            KEY idx_status (claim_status)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Refunds table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_refunds (
+            refund_id bigint(20) unsigned NOT NULL auto_increment,
+            company_id bigint(20) unsigned NOT NULL,
+            user_id bigint(20) unsigned NOT NULL,
+            refund_amount decimal(10,2) default 0.00,
+            refund_reason text,
+            refunded_at datetime,
+            status enum('pending','processed','failed') default 'pending',
+            created_at datetime default current_timestamp,
+            PRIMARY KEY  (refund_id),
+            KEY idx_company (company_id),
+            KEY idx_status (status)
+        ) $charset_collate;";
+        dbDelta($sql);
+        
+        // Subscriptions table
+        $sql = "CREATE TABLE {$wpdb->prefix}mp_subscriptions (
+            subscription_id bigint(20) unsigned NOT NULL auto_increment,
+            company_id bigint(20) unsigned NOT NULL,
+            plan_name varchar(100) NOT NULL,
+            plan_price decimal(10,2) default 0.00,
+            billing_cycle enum('monthly','yearly') default 'monthly',
+            status enum('active','cancelled','expired','paused') default 'active',
+            start_date datetime,
+            end_date datetime,
+            next_billing_date datetime,
+            created_at datetime default current_timestamp,
+            updated_at datetime default current_timestamp on update current_timestamp,
+            PRIMARY KEY  (subscription_id),
+            KEY idx_company (company_id),
+            KEY idx_status (status)
         ) $charset_collate;";
         dbDelta($sql);
         
