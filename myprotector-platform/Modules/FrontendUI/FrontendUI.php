@@ -475,17 +475,17 @@ class FrontendUI extends Module {
      * Setup routing
      */
     public function setupRouting(): void {
-        // Register query vars early
+        // Register query vars early (priority 0)
         add_filter('query_vars', [$this, 'addQueryVars'], 0);
 
-        // Register rewrite rules on init
+        // Register rewrite rules on init (priority 0)
         add_action('init', [$this, 'addRewriteRules'], 0);
 
-        // Handle templates
+        // Handle templates - use high priority to catch early
         add_filter('template_include', [$this, 'handleTemplateInclude'], 1);
 
-        // Override page content
-        add_filter('the_content', [$this, 'overridePageContent'], 1);
+        // Override page content - use priority 20 to run after most themes
+        add_filter('the_content', [$this, 'overridePageContent'], 20);
 
         // Flush once if needed
         if (get_option('mp_flush_rewrite_rules')) {
@@ -576,6 +576,10 @@ class FrontendUI extends Module {
         $page_slugs = ['home', 'businesses', 'login', 'register', 'dashboard', 'about', 'contact'];
         
         if (in_array($post->post_name, $page_slugs)) {
+            // Debug log
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[MyProtector] overridePageContent: page=' . $post->post_name . ', loading template');
+            }
             return $this->renderPage($post->post_name);
         }
         
