@@ -1481,7 +1481,7 @@ class FrontendUI extends Module {
         
         // Widgets
         add_shortcode('mp_rating', [$this, 'renderRatingBadge']);
-        add_short_code('mp_reviews', [$this, 'renderReviewSummary']);
+        add_shortcode('mp_reviews', [$this, 'renderReviewSummary']);
         add_shortcode('mp_trust', [$this, 'renderTrustWidget']);
     }
 
