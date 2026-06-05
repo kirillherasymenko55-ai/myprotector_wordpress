@@ -7,7 +7,8 @@
  * @package MyProtector\Core
  */
 
-// Prevent direct access
+namespace MyProtector\Core;
+
 if (!defined('ABSPATH')) exit;
 
 class DataSeeder {
