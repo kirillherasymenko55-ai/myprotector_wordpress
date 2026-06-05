@@ -16,6 +16,14 @@ $linkedin_url = defined('MYPROTECTOR_SOCIAL_LINKEDIN') ? MYPROTECTOR_SOCIAL_LINK
 $twitter_url = defined('MYPROTECTOR_SOCIAL_TWITTER') ? MYPROTECTOR_SOCIAL_TWITTER : 'https://twitter.com/myprotector';
 $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDER_LINKEDIN : 'https://linkedin.com/in/adamwyrzycki';
 $founder_name = defined('MYPROTECTOR_FOUNDER_NAME') ? MYPROTECTOR_FOUNDER_NAME : 'Adam Wyrzycki';
+
+/**
+ * LOGO CONFIGURATION
+ * Set MYPROTECTOR_LOGO_URL to your logo image URL
+ */
+$logo_url = defined('MYPROTECTOR_LOGO_URL') && !empty(MYPROTECTOR_LOGO_URL) 
+    ? MYPROTECTOR_LOGO_URL 
+    : '';
 ?>
 
 <footer class="mp-footer">
@@ -23,8 +31,14 @@ $founder_name = defined('MYPROTECTOR_FOUNDER_NAME') ? MYPROTECTOR_FOUNDER_NAME :
         <div class="mp-footer-grid">
             <div class="mp-footer-brand">
                 <a href="<?php echo esc_url($company_url); ?>" class="mp-logo">
-                    <div class="mp-logo-icon">MP</div>
-                    <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php if (!empty($logo_url)): ?>
+                        <!-- Custom Logo Image -->
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                    <?php else: ?>
+                        <!-- Default Text Logo -->
+                        <div class="mp-logo-icon">MP</div>
+                        <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php endif; ?>
                 </a>
                 <p class="mp-footer-desc">
                     Building trust between businesses and customers through 

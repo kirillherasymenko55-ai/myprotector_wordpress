@@ -1,6 +1,6 @@
 <?php
 /**
- * MyProtector Platform - Header Component (FIXED)
+ * MyProtector Platform - Header Component
  */
 
 if (!defined('ABSPATH')) exit;
@@ -16,6 +16,22 @@ $dashboard_url = home_url('/dashboard');
 $login_url     = home_url('/login');
 $register_url  = home_url('/register');
 $logout_url    = function_exists('wp_logout_url') ? wp_logout_url($company_url) : $company_url;
+
+/**
+ * =========================
+ * LOGO CONFIGURATION
+ * =========================
+ * Set MYPROTECTOR_LOGO_URL to your logo image URL
+ * Example: define('MYPROTECTOR_LOGO_URL', 'https://example.com/logo.png');
+ * 
+ * Logo image recommendations:
+ * - Format: PNG, SVG, or WebP
+ * - Recommended size: 150-200px width, auto height
+ * - Should have transparent background for best results
+ */
+$logo_url = defined('MYPROTECTOR_LOGO_URL') && !empty(MYPROTECTOR_LOGO_URL) 
+    ? MYPROTECTOR_LOGO_URL 
+    : '';
 
 /**
  * =========================
@@ -49,8 +65,14 @@ if ($current_user instanceof WP_User) {
         <div class="mp-header-inner">
 
             <a href="<?php echo esc_url($company_url); ?>" class="mp-logo">
-                <div class="mp-logo-icon">MP</div>
-                <div class="mp-logo-text">My<span>Protector</span></div>
+                <?php if (!empty($logo_url)): ?>
+                    <!-- Custom Logo Image -->
+                    <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                <?php else: ?>
+                    <!-- Default Text Logo -->
+                    <div class="mp-logo-icon">MP</div>
+                    <div class="mp-logo-text">My<span>Protector</span></div>
+                <?php endif; ?>
             </a>
 
             <nav class="mp-nav">
