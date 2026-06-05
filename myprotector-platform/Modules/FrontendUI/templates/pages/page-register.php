@@ -49,9 +49,16 @@ $user_type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : 'indivi
         <div class="mp-auth-container" style="max-width: 480px;">
             <!-- Logo -->
             <div class="mp-auth-header">
-                <a href="<?php echo esc_url($logo_url); ?>" class="mp-logo">
-                    <div class="mp-logo-icon">MP</div>
-                    <div class="mp-logo-text">My<span>Protector</span></div>
+                <a href="<?php echo esc_url($company_url); ?>" class="mp-logo">
+                    <?php if (!empty($logo_url)): ?>
+                        <!-- Custom Logo Image -->
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                        <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php else: ?>
+                        <!-- Default Text Logo -->
+                        <div class="mp-logo-icon">MP</div>
+                        <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php endif; ?>
                 </a>
                 <h1 class="mp-auth-title">Create Your Account</h1>
                 <p class="mp-auth-subtitle">Join thousands who trust MyProtector</p>

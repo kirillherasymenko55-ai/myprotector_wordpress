@@ -49,9 +49,16 @@ $redirect_to = isset($_GET['redirect_to']) ? esc_url($_GET['redirect_to']) : $co
         <div class="mp-auth-container">
             <!-- Logo -->
             <div class="mp-auth-header">
-                <a href="<?php echo esc_url($logo_url); ?>" class="mp-logo">
-                    <div class="mp-logo-icon">MP</div>
-                    <div class="mp-logo-text">My<span>Protector</span></div>
+                <a href="<?php echo esc_url($company_url); ?>" class="mp-logo">
+                    <?php if (!empty($logo_url)): ?>
+                        <!-- Custom Logo Image -->
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                        <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php else: ?>
+                        <!-- Default Text Logo -->
+                        <div class="mp-logo-icon">MP</div>
+                        <div class="mp-logo-text">My<span>Protector</span></div>
+                    <?php endif; ?>
                 </a>
                 <h1 class="mp-auth-title">Welcome Back</h1>
                 <p class="mp-auth-subtitle">Sign in to your account to continue</p>
