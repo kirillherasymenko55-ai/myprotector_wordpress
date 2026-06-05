@@ -2,16 +2,13 @@
 /**
  * MyProtector Platform - Homepage Template
  * 
- * Self-contained template with inline CSS loading
+ * Uses custom header/footer components
  * No dependency on WordPress theme header/footer
  *
  * @package MyProtector\Modules\FrontendUI
  */
 
 if (!defined('ABSPATH')) exit;
-
-// Get plugin URL for assets
-$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
 // Get FrontendUI module instance for mock data
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
@@ -21,22 +18,12 @@ $reviews = $frontend_ui->getMockData('reviews');
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $founder_name = defined('MYPROTECTOR_FOUNDER_NAME') ? MYPROTECTOR_FOUNDER_NAME : 'Adam Wyrzycki';
 $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDER_LINKEDIN : 'https://linkedin.com/in/adamwyrzycki';
+
+// Include custom header
+include_once $frontend_ui->getPath('templates/components/header.php');
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-    <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php wp_title('|', true, 'right'); ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
-    <?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-<div class="mp-frontend-ui">
-    <!-- Hero Section -->
+
+<!-- Hero Section -->
     <section class="mp-hero">
         <div class="mp-container mp-hero-content">
             <h1>Trust the Businesses<br>You Choose</h1>
@@ -369,6 +356,9 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
         </div>
     </section>
 </div>
-<?php wp_footer(); ?>
-</body>
-</html>
+
+<?php 
+// Include custom footer
+include_once $frontend_ui->getPath('templates/components/footer.php');
+wp_footer(); 
+?>

@@ -2,7 +2,7 @@
 /**
  * MyProtector Platform - Reseller Dashboard Template
  * 
- * Self-contained template with inline CSS loading
+ * Uses custom header/footer components
  * Reseller dashboard with commission tracking, referral links, and performance
  * Requires WordPress authentication and reseller role
  *
@@ -19,27 +19,16 @@ if (!is_user_logged_in()) {
     exit;
 }
 
-// Get plugin URL for assets
-$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
+// Get FrontendUI module instance
+$frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
 
 $current_user = wp_get_current_user();
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $logout_url = wp_logout_url($company_url);
-?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-    <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php wp_title('|', true, 'right'); ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
-    <?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-<?php
+
+// Include custom header
+include_once $frontend_ui->getPath('templates/components/header.php');
+
 // Mock reseller data
 $reseller = [
     'name' => $current_user->display_name ?: 'Reseller',
@@ -502,6 +491,8 @@ $tier_info = [
 })(jQuery);
 </script>
 
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php 
+// Include custom footer
+include_once $frontend_ui->getPath('templates/components/footer.php');
+wp_footer(); 
+?>
