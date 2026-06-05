@@ -34,6 +34,7 @@ $logo_url = defined('MYPROTECTOR_LOGO_URL') && !empty(MYPROTECTOR_LOGO_URL)
                     <?php if (!empty($logo_url)): ?>
                         <!-- Custom Logo Image -->
                         <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                        <div class="mp-logo-text">My<span>Protector</span></div>
                     <?php else: ?>
                         <!-- Default Text Logo -->
                         <div class="mp-logo-icon">MP</div>

@@ -68,6 +68,7 @@ if ($current_user instanceof WP_User) {
                 <?php if (!empty($logo_url)): ?>
                     <!-- Custom Logo Image -->
                     <img src="<?php echo esc_url($logo_url); ?>" alt="MyProtector Logo" class="mp-logo-image">
+                    <div class="mp-logo-text">My<span>Protector</span></div>
                 <?php else: ?>
                     <!-- Default Text Logo -->
                     <div class="mp-logo-icon">MP</div>
