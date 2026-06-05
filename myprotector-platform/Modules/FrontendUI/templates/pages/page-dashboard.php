@@ -2,14 +2,19 @@
 /**
  * MyProtector Platform - Individual Dashboard Template
  * 
- * Uses custom header/footer components
- * User dashboard with reviews, activity, and settings
- * Requires WordPress authentication
+ * Self-contained template with custom header/footer
+ * Loaded via template_include filter - no theme dependencies
  *
  * @package MyProtector\Modules\FrontendUI
  */
 
 if (!defined('ABSPATH')) exit;
+
+// Get plugin URL for assets
+$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
+
+// Get FrontendUI module instance
+$frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
 
 // Require authentication
 if (!is_user_logged_in()) {
@@ -19,16 +24,28 @@ if (!is_user_logged_in()) {
     exit;
 }
 
-// Get FrontendUI module instance
-$frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
 $current_user = wp_get_current_user();
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $logout_url = wp_logout_url($company_url);
+?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - <?php bloginfo('name'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
 
-// Include custom header
-include_once $frontend_ui->getPath('templates/components/header.php');
+<?php include $frontend_ui->getPath('templates/components/header.php'); ?>
 
-// Get user's data
+<main class="mp-frontend-ui">
+<?php // Get user's data
 $user_id = get_current_user_id();
 $user_reviews = $frontend_ui->getMockData('reviews');
 $stats = [
@@ -282,8 +299,7 @@ $stats = [
 })(jQuery);
 </script>
 
-<?php 
-// Include custom footer
-include_once $frontend_ui->getPath('templates/components/footer.php');
-wp_footer(); 
-?>
+<?php include $frontend_ui->getPath('templates/components/footer.php'); ?>
+<?php wp_footer(); ?>
+</body>
+</html>
