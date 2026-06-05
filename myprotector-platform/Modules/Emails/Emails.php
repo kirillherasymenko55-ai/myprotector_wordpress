@@ -220,9 +220,22 @@ class Emails extends Module {
      * @return void
      */
     public function sendWelcomeEmail(int $user_id, array $userdata): void {
-        $user = get_userdata($user_id);
+        // Skip during plugin activation (DataSeeder) when services may not be initialized
+        if (!did_action('init')) {
+            return;
+        }
         
-        $this->getService('emails.sender')->send($user->user_email, 'welcome', [
+        $sender = $this->getService('emails.sender');
+        if (!$sender) {
+            return;
+        }
+        
+        $user = get_userdata($user_id);
+        if (!$user) {
+            return;
+        }
+        
+        $sender->send($user->user_email, 'welcome', [
             'user_name' => $user->display_name,
             'user_email' => $user->user_email,
             'login_url' => wp_login_url(),
