@@ -609,38 +609,56 @@ class FrontendUI extends Module {
      * @return string
      */
     public function handleTemplateInclude($template) {
-        global $wp_query;
+        global $wp_query, $post;
         
-        // FIX: Use get_query_var() to properly access registered query vars
+        // Check if this is one of our custom pages via query var first
         $mp_page = get_query_var('mp_page');
         $mp_slug = get_query_var('mp_slug');
         
         // Debug logging
         if (defined('WP_DEBUG') && WP_DEBUG) {
             error_log(sprintf(
-                '[MyProtector] FrontendUI: handleTemplateInclude() - mp_page=%s, mp_slug=%s',
+                '[MyProtector] FrontendUI: handleTemplateInclude() - mp_page=%s, mp_slug=%s, post=%s',
                 $mp_page,
-                $mp_slug
+                $mp_slug,
+                $post ? $post->post_name : 'null'
             ));
         }
         
-        if (empty($mp_page)) {
-            return $template;
+        // Check for custom route via query var (for URLs like /?mp_page=home)
+        if (!empty($mp_page)) {
+            return $this->loadCustomTemplate($mp_page, $template);
         }
         
-        // Debug: mp_page found
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log(sprintf('[MyProtector] FrontendUI: mp_page=%s, looking for template', $mp_page));
+        // Check if this is a WordPress page with one of our slugs
+        if (is_page() && $post) {
+            $page_slugs = ['home', 'businesses', 'login', 'register', 'dashboard', 'about', 'contact', 'business-dashboard', 'reseller-dashboard'];
+            
+            if (in_array($post->post_name, $page_slugs)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log(sprintf('[MyProtector] FrontendUI: Found page with slug=%s, loading custom template', $post->post_name));
+                }
+                return $this->loadCustomTemplate($post->post_name, $template);
+            }
         }
         
-        // For custom routes, use a minimal template
-        $template_file = $this->page_routes[$mp_page] ?? null;
+        return $template;
+    }
+    
+    /**
+     * Load a custom template file
+     * 
+     * @param string $page
+     * @param string $fallback
+     * @return string
+     */
+    private function loadCustomTemplate(string $page, string $fallback) {
+        $template_file = $this->page_routes[$page] ?? null;
         
         if ($template_file) {
             $template_path = $this->getPath('templates/' . $template_file);
             
             if (file_exists($template_path)) {
-                // Debug: template found
                 if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log(sprintf('[MyProtector] FrontendUI: Loading template %s', $template_path));
                 }
@@ -648,30 +666,10 @@ class FrontendUI extends Module {
                 status_header(200);
                 nocache_headers();
                 return $template_path;
-            } else {
-                // FIX: If template doesn't exist, show an error instead of silently failing
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log(sprintf('[MyProtector] FrontendUI: Template not found: %s', $template_path));
-                }
-                
-                // Return a minimal fallback template or show error
-                $fallback_path = $this->getPath('templates/pages/page-error.php');
-                if (file_exists($fallback_path)) {
-                    return $fallback_path;
-                }
-                
-                // Last resort: show WordPress debug
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    wp_die(sprintf(
-                        'MyProtector: Template file not found for route "%s" at path: %s',
-                        esc_html($mp_page),
-                        esc_html($template_path)
-                    ));
-                }
             }
         }
         
-        return $template;
+        return $fallback;
     }
 
     /**

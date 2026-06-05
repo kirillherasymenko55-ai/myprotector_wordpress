@@ -2,13 +2,16 @@
 /**
  * MyProtector Platform - Contact Page Template
  * 
- * Uses custom header/footer components
- * Contact form with business/support information
+ * Self-contained template with custom header/footer
+ * Loaded via template_include filter - no theme dependencies
  *
  * @package MyProtector\Modules\FrontendUI
  */
 
 if (!defined('ABSPATH')) exit;
+
+// Get plugin URL for assets
+$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
 // Get FrontendUI module instance
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
@@ -16,12 +19,24 @@ $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $company_email = defined('MYPROTECTOR_COMPANY_EMAIL') ? MYPROTECTOR_COMPANY_EMAIL : 'contact@myprotector.com';
 $support_email = defined('MYPROTECTOR_SUPPORT_EMAIL') ? MYPROTECTOR_SUPPORT_EMAIL : 'support@myprotector.com';
-
-// Include custom header
-include_once $frontend_ui->getPath('templates/components/header.php');
 ?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - <?php bloginfo('name'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
 
-<div class="mp-frontend-ui">
+<?php include $frontend_ui->getPath('templates/components/header.php'); ?>
+
+<main class="mp-frontend-ui">
     <!-- Page Header -->
     <section class="mp-hero" style="padding: var(--mp-spacing-3xl) 0;">
         <div class="mp-container mp-hero-content">
@@ -155,8 +170,7 @@ include_once $frontend_ui->getPath('templates/components/header.php');
 }
 </style>
 
-<?php 
-// Include custom footer
-include_once $frontend_ui->getPath('templates/components/footer.php');
-wp_footer(); 
-?>
+<?php include $frontend_ui->getPath('templates/components/footer.php'); ?>
+<?php wp_footer(); ?>
+</body>
+</html>
