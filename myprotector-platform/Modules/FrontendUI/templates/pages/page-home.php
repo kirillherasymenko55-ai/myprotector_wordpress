@@ -282,7 +282,7 @@ $is_logged_in = function_exists('is_user_logged_in') && is_user_logged_in();
                     </div>
                     <p class="mp-business-card-description"><?php echo esc_html($business['description']); ?></p>
                     <div class="mp-business-card-footer">
-                        <span style="color: var(--mp-gray-500); font-size: var(--mp-font-size-sm);">
+                        <span class="mp-location">
                             📍 <?php echo esc_html($business['location']); ?>
                         </span>
                         <a href="<?php echo esc_url($company_url); ?>/business/<?php echo esc_attr($business['slug']); ?>" class="mp-btn mp-btn-sm mp-btn-outline">
