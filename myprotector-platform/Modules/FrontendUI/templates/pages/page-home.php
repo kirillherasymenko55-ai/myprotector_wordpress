@@ -125,10 +125,30 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
             </div>
             
             <div class="mp-grid mp-grid-3" style="max-width: 1000px; margin: 0 auto;">
-                <!-- Green - Shopping Safe -->
+                <!-- Green - Shopping Safe - Woman with shopping bag -->
                 <div class="mp-card" style="border-top: 4px solid var(--mp-green);">
                     <div class="mp-trust-light mp-trust-light-green" style="width: 80px; height: 80px; margin: 0 auto var(--mp-spacing-lg);">
-                        <span class="mp-trust-icon">🛒</span>
+                        <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Woman head -->
+                            <circle cx="32" cy="12" r="7" fill="#059669"/>
+                            <!-- Woman hair -->
+                            <path d="M25 11C25 7 28 4 32 4C36 4 39 7 39 11" fill="#059669"/>
+                            <path d="M23 13C23 9 27 6 32 6C37 6 41 9 41 13C41 15 40 17 38 18L26 18C24 17 23 15 23 13Z" fill="#059669"/>
+                            <!-- Woman body -->
+                            <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#059669"/>
+                            <!-- Woman arm holding bag -->
+                            <path d="M26 21L18 30L16 28" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M38 21L46 30L48 28" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- Shopping bag -->
+                            <rect x="42" y="26" width="14" height="16" rx="2" fill="#059669"/>
+                            <path d="M45 26V22C45 20 47 18 49 18C51 18 53 20 53 22V26" stroke="#059669" stroke-width="2"/>
+                            <!-- Legs -->
+                            <path d="M28 40L26 56" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M36 40L38 56" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Feet -->
+                            <ellipse cx="25" cy="58" rx="4" ry="2" fill="#059669"/>
+                            <ellipse cx="39" cy="58" rx="4" ry="2" fill="#059669"/>
+                        </svg>
                     </div>
                     <h3 style="text-align: center; color: var(--mp-green);">Shopping Safe</h3>
                     <p style="text-align: center; color: var(--mp-gray-600); margin-bottom: var(--mp-spacing-md);">
@@ -143,10 +163,29 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
                     </ul>
                 </div>
                 
-                <!-- Amber - Walking Safe -->
+                <!-- Amber - Walking Safe - Man with shopping bag -->
                 <div class="mp-card" style="border-top: 4px solid var(--mp-amber);">
                     <div class="mp-trust-light mp-trust-light-amber" style="width: 80px; height: 80px; margin: 0 auto var(--mp-spacing-lg);">
-                        <span class="mp-trust-icon">🚶</span>
+                        <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Man head -->
+                            <circle cx="32" cy="12" r="7" fill="#d97706"/>
+                            <!-- Man hair -->
+                            <path d="M25 10C25 6 28 4 32 4C36 4 39 6 39 10L40 12H24L25 10Z" fill="#d97706"/>
+                            <!-- Man body -->
+                            <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#d97706"/>
+                            <!-- Man arms -->
+                            <path d="M26 21L18 30L16 28" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M38 21L46 30L48 28" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- Shopping bag -->
+                            <rect x="42" y="26" width="14" height="16" rx="2" fill="#d97706"/>
+                            <path d="M45 26V22C45 20 47 18 49 18C51 18 53 20 53 22V26" stroke="#d97706" stroke-width="2"/>
+                            <!-- Legs -->
+                            <path d="M28 40L26 56" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M36 40L38 56" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Feet -->
+                            <ellipse cx="25" cy="58" rx="4" ry="2" fill="#d97706"/>
+                            <ellipse cx="39" cy="58" rx="4" ry="2" fill="#d97706"/>
+                        </svg>
                     </div>
                     <h3 style="text-align: center; color: var(--mp-amber);">Walking Safe</h3>
                     <p style="text-align: center; color: var(--mp-gray-600); margin-bottom: var(--mp-spacing-md);">
@@ -161,10 +200,27 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
                     </ul>
                 </div>
                 
-                <!-- Red - Caution -->
+                <!-- Red - Caution - Man standing with no bag -->
                 <div class="mp-card" style="border-top: 4px solid var(--mp-red);">
                     <div class="mp-trust-light mp-trust-light-red" style="width: 80px; height: 80px; margin: 0 auto var(--mp-spacing-lg);">
-                        <span class="mp-trust-icon">⚠️</span>
+                        <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Man head -->
+                            <circle cx="32" cy="12" r="7" fill="#dc2626"/>
+                            <!-- Man hair -->
+                            <path d="M25 10C25 6 28 4 32 4C36 4 39 6 39 10L40 12H24L25 10Z" fill="#dc2626"/>
+                            <!-- Man body -->
+                            <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#dc2626"/>
+                            <!-- Man arms - crossed/uncertain pose -->
+                            <path d="M26 21L18 26" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M38 21L46 26" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- No shopping bag - hands at sides -->
+                            <!-- Legs -->
+                            <path d="M28 40L26 56" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M36 40L38 56" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Feet -->
+                            <ellipse cx="25" cy="58" rx="4" ry="2" fill="#dc2626"/>
+                            <ellipse cx="39" cy="58" rx="4" ry="2" fill="#dc2626"/>
+                        </svg>
                     </div>
                     <h3 style="text-align: center; color: var(--mp-red);">Caution</h3>
                     <p style="text-align: center; color: var(--mp-gray-600); margin-bottom: var(--mp-spacing-md);">
