@@ -74,7 +74,7 @@ class FrontendUI extends Module {
         'business-dashboard' => 'pages/page-business-dashboard.php',
         'reseller-dashboard'  => 'pages/page-reseller-dashboard.php',
         'contact'   => 'pages/page-contact.php',
-        'business'  => 'business.php',
+        'business'  => 'pages/business.php',
     ];
 
     /**
