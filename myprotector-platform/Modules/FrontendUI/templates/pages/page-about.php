@@ -177,6 +177,80 @@ $stats = $frontend_ui->getMockData('stats');
                     </p>
                 </div>
             </div>
+            
+            <!-- Traffic Light Trust System Visual -->
+            <div style="margin-top: var(--mp-spacing-3xl);">
+                <h3 class="mp-section-title" style="margin-bottom: var(--mp-spacing-xl);">Trust Status Levels</h3>
+                <div class="mp-grid mp-grid-3" style="max-width: 900px; margin: 0 auto;">
+                    <!-- Green - Shopping Safe -->
+                    <div class="mp-card" style="border-top: 4px solid var(--mp-green);">
+                        <div style="width: 60px; height: 60px; margin: 0 auto var(--mp-spacing-lg);">
+                            <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="32" cy="12" r="7" fill="#059669"/>
+                                <path d="M25 11C25 7 28 4 32 4C36 4 39 7 39 11" fill="#059669"/>
+                                <path d="M23 13C23 9 27 6 32 6C37 6 41 9 41 13C41 15 40 17 38 18L26 18C24 17 23 15 23 13Z" fill="#059669"/>
+                                <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#059669"/>
+                                <path d="M26 21L18 30L16 28" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M38 21L46 30L48 28" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+                                <rect x="42" y="26" width="14" height="16" rx="2" fill="#059669"/>
+                                <path d="M45 26V22C45 20 47 18 49 18C51 18 53 20 53 22V26" stroke="#059669" stroke-width="2"/>
+                                <path d="M28 40L26 56" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M36 40L38 56" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                                <ellipse cx="25" cy="58" rx="4" ry="2" fill="#059669"/>
+                                <ellipse cx="39" cy="58" rx="4" ry="2" fill="#059669"/>
+                            </svg>
+                        </div>
+                        <h3 style="text-align: center; color: var(--mp-green);">Shopping Safe</h3>
+                        <p style="text-align: center; color: var(--mp-gray-600); font-size: var(--mp-font-size-sm);">
+                            4-5 criteria met. High transparency.
+                        </p>
+                    </div>
+                    
+                    <!-- Amber - Walking Safe -->
+                    <div class="mp-card" style="border-top: 4px solid var(--mp-amber);">
+                        <div style="width: 60px; height: 60px; margin: 0 auto var(--mp-spacing-lg);">
+                            <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="32" cy="12" r="7" fill="#d97706"/>
+                                <path d="M25 10C25 6 28 4 32 4C36 4 39 6 39 10L40 12H24L25 10Z" fill="#d97706"/>
+                                <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#d97706"/>
+                                <path d="M26 21L18 30L16 28" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M38 21L46 30L48 28" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+                                <rect x="42" y="26" width="14" height="16" rx="2" fill="#d97706"/>
+                                <path d="M45 26V22C45 20 47 18 49 18C51 18 53 20 53 22V26" stroke="#d97706" stroke-width="2"/>
+                                <path d="M28 40L26 56" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M36 40L38 56" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+                                <ellipse cx="25" cy="58" rx="4" ry="2" fill="#d97706"/>
+                                <ellipse cx="39" cy="58" rx="4" ry="2" fill="#d97706"/>
+                            </svg>
+                        </div>
+                        <h3 style="text-align: center; color: var(--mp-amber);">Walking Safe</h3>
+                        <p style="text-align: center; color: var(--mp-gray-600); font-size: var(--mp-font-size-sm);">
+                            2-3 criteria met. Normal caution.
+                        </p>
+                    </div>
+                    
+                    <!-- Red - Caution -->
+                    <div class="mp-card" style="border-top: 4px solid var(--mp-red);">
+                        <div style="width: 60px; height: 60px; margin: 0 auto var(--mp-spacing-lg);">
+                            <svg width="50" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="32" cy="12" r="7" fill="#dc2626"/>
+                                <path d="M25 10C25 6 28 4 32 4C36 4 39 6 39 10L40 12H24L25 10Z" fill="#dc2626"/>
+                                <path d="M26 19L24 35L22 40H42L40 35L38 19" fill="#dc2626"/>
+                                <path d="M26 21L18 26" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M38 21L46 26" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M28 40L26 56" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M36 40L38 56" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                                <ellipse cx="25" cy="58" rx="4" ry="2" fill="#dc2626"/>
+                                <ellipse cx="39" cy="58" rx="4" ry="2" fill="#dc2626"/>
+                            </svg>
+                        </div>
+                        <h3 style="text-align: center; color: var(--mp-red);">Caution</h3>
+                        <p style="text-align: center; color: var(--mp-gray-600); font-size: var(--mp-font-size-sm);">
+                            0-1 criteria met. Do research.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
