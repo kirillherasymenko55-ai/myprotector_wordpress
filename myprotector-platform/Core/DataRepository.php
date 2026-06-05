@@ -7,6 +7,8 @@
  * @package MyProtector\Core
  */
 
+namespace MyProtector\Core;
+
 if (!defined('ABSPATH')) exit;
 
 class DataRepository {
