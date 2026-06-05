@@ -782,20 +782,22 @@ img {
     display: flex;
     align-items: center;
     gap: var(--mp-spacing-sm);
-    padding: var(--mp-spacing-sm) 0;
-    font-size: var(--mp-font-size-sm);
+    padding: 4px 0;
+    font-size: 13px;
+    color: var(--mp-gray-700);
 }
 
-.mp-trust-checklist .mp-icon-check {
-    color: var(--mp-green);
-}
-
+.mp-trust-checklist .mp-icon-check,
+.mp-trust-checklist .mp-icon-warning,
 .mp-trust-checklist .mp-icon-cross {
-    color: var(--mp-red);
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
-.mp-trust-checklist .mp-icon-warning {
-    color: var(--mp-amber);
+/* Emoji/Icon sizing in cards */
+.mp-business-card-footer span,
+.mp-business-card-footer .mp-emoji {
+    font-size: 14px;
 }
 
 /* ==========================================================================
@@ -926,6 +928,23 @@ img {
 .mp-review-date {
     font-size: var(--mp-font-size-sm);
     color: var(--mp-gray-500);
+}
+
+.mp-review-business {
+    display: block;
+    font-size: var(--mp-font-size-xs);
+    color: var(--mp-primary);
+    margin-bottom: 2px;
+}
+
+.mp-review-business a {
+    color: var(--mp-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.mp-review-business a:hover {
+    text-decoration: underline;
 }
 
 .mp-review-title {

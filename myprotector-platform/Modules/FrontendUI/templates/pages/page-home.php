@@ -21,6 +21,9 @@ $reviews = $frontend_ui->getMockData('reviews');
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $founder_name = defined('MYPROTECTOR_FOUNDER_NAME') ? MYPROTECTOR_FOUNDER_NAME : 'Adam Wyrzycki';
 $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDER_LINKEDIN : 'https://linkedin.com/in/adamwyrzycki';
+
+// Check if user is logged in
+$is_logged_in = function_exists('is_user_logged_in') && is_user_logged_in();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -348,11 +351,26 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
             
             <div class="mp-featured-reviews">
                 <?php foreach (array_slice($reviews, 0, 4) as $review): ?>
+                <?php 
+                // Get business name from business_id
+                $review_business = null;
+                foreach ($businesses as $b) {
+                    if ($b['id'] == ($review['business_id'] ?? 0)) {
+                        $review_business = $b;
+                        break;
+                    }
+                }
+                ?>
                 <div class="mp-review-card">
                     <div class="mp-review-header">
                         <div class="mp-review-avatar"><?php echo esc_html(substr($review['reviewer'] ?? 'U', 0, 1)); ?></div>
                         <div class="mp-review-meta">
                             <h4 class="mp-review-author"><?php echo esc_html($review['reviewer'] ?? 'Anonymous'); ?></h4>
+                            <?php if ($review_business): ?>
+                            <span class="mp-review-business">
+                                <a href="<?php echo esc_url($company_url); ?>/business/<?php echo esc_attr($review_business['slug']); ?>"><?php echo esc_html($review_business['name']); ?></a>
+                            </span>
+                            <?php endif; ?>
                             <span class="mp-review-date"><?php echo esc_html($review['date']); ?></span>
                         </div>
                         <div class="mp-review-rating">
@@ -408,6 +426,7 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
         </div>
     </section>
 
+    <?php if (!$is_logged_in): ?>
     <!-- CTA Section -->
     <section class="mp-cta">
         <div class="mp-container">
@@ -426,6 +445,7 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
             </div>
         </div>
     </section>
+    <?php endif; ?>
 </main>
 
 <?php include $frontend_ui->getPath('templates/components/footer.php'); ?>
