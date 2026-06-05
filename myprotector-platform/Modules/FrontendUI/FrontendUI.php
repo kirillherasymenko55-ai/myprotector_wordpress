@@ -575,25 +575,30 @@ class FrontendUI extends Module {
     public function overridePageContent($content) {
         global $post;
         
-        if (!is_page() || !$post) {
-            return $content;
-        }
+        // Debug log for ALL pages - log first thing
+        error_log('[MyProtector] overridePageContent CALLED, post=' . ($post ? $post->post_name : 'null') . ', content_length=' . strlen($content));
         
-        // Debug log for ALL pages
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('[MyProtector] overridePageContent: checking page=' . $post->post_name);
+        if (!is_page() || !$post) {
+            error_log('[MyProtector] overridePageContent: not a page or no post, returning original');
+            return $content;
         }
         
         $page_slugs = ['home', 'businesses', 'login', 'register', 'dashboard', 'about', 'contact'];
         
+        error_log('[MyProtector] overridePageContent: checking ' . $post->post_name . ' against [' . implode(',', $page_slugs) . ']');
+        
         if (in_array($post->post_name, $page_slugs)) {
             // Debug log
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[MyProtector] overridePageContent: page=' . $post->post_name . ', MATCH! loading template');
-            }
-            return $this->renderPage($post->post_name);
+            error_log('[MyProtector] overridePageContent: MATCH! calling renderPage(' . $post->post_name . ')');
+            
+            $result = $this->renderPage($post->post_name);
+            
+            error_log('[MyProtector] overridePageContent: renderPage returned ' . strlen($result) . ' chars');
+            
+            return $result;
         }
         
+        error_log('[MyProtector] overridePageContent: no match, returning original content');
         return $content;
     }
 
@@ -1481,7 +1486,7 @@ class FrontendUI extends Module {
         
         // Widgets
         add_shortcode('mp_rating', [$this, 'renderRatingBadge']);
-        add_short_code('mp_reviews', [$this, 'renderReviewSummary']);
+        add_shortcode('mp_reviews', [$this, 'renderReviewSummary']);
         add_shortcode('mp_trust', [$this, 'renderTrustWidget']);
     }
 
