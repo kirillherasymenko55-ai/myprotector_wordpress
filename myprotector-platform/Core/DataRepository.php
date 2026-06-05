@@ -84,7 +84,7 @@ class DataRepository {
         
         $business = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT c.*, ts.status as trust_status, ts.trust_score as signal_trust_score
+                "SELECT c.*, ts.status as trust_status
                  FROM {$wpdb->prefix}mp_companies c
                  LEFT JOIN {$wpdb->prefix}mp_trust_signals ts ON c.company_id = ts.company_id
                  WHERE c.company_slug = %s AND c.status = 'approved'",
@@ -105,7 +105,7 @@ class DataRepository {
         
         $business = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT c.*, ts.status as trust_status, ts.trust_score as signal_trust_score
+                "SELECT c.*, ts.status as trust_status
                  FROM {$wpdb->prefix}mp_companies c
                  LEFT JOIN {$wpdb->prefix}mp_trust_signals ts ON c.company_id = ts.company_id
                  WHERE c.company_id = %d",
