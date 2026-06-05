@@ -1821,24 +1821,24 @@ class FrontendUI extends Module {
         
         switch ($key) {
             case 'businesses':
-                return DataRepository::getBusinesses();
+                return \MyProtector\Core\DataRepository::getBusinesses();
                 
             case 'reviews':
-                return DataRepository::getRecentReviews(20);
+                return \MyProtector\Core\DataRepository::getRecentReviews(20);
                 
             case 'categories':
-                return DataRepository::getCategories();
+                return \MyProtector\Core\DataRepository::getCategories();
                 
             case 'stats':
-                return DataRepository::getStats();
+                return \MyProtector\Core\DataRepository::getStats();
                 
             default:
                 // Return real data for any key
                 $data = [];
-                $data['businesses'] = DataRepository::getBusinesses();
-                $data['reviews'] = DataRepository::getRecentReviews(20);
-                $data['categories'] = DataRepository::getCategories();
-                $data['stats'] = DataRepository::getStats();
+                $data['businesses'] = \MyProtector\Core\DataRepository::getBusinesses();
+                $data['reviews'] = \MyProtector\Core\DataRepository::getRecentReviews(20);
+                $data['categories'] = \MyProtector\Core\DataRepository::getCategories();
+                $data['stats'] = \MyProtector\Core\DataRepository::getStats();
                 return $data[$key] ?? $data;
         }
     }
@@ -1848,7 +1848,7 @@ class FrontendUI extends Module {
      */
     public function getBusinesses(array $args = []): array {
         require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
-        return DataRepository::getBusinesses($args);
+        return \MyProtector\Core\DataRepository::getBusinesses($args);
     }
     
     /**
@@ -1856,7 +1856,7 @@ class FrontendUI extends Module {
      */
     public function getBusinessBySlug(string $slug): ?array {
         require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
-        return DataRepository::getBusinessBySlug($slug);
+        return \MyProtector\Core\DataRepository::getBusinessBySlug($slug);
     }
     
     /**
@@ -1864,7 +1864,7 @@ class FrontendUI extends Module {
      */
     public function getReviewsByBusiness(int $business_id, int $limit = 10): array {
         require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
-        return DataRepository::getReviewsByBusiness($business_id, $limit);
+        return \MyProtector\Core\DataRepository::getReviewsByBusiness($business_id, $limit);
     }
     
     /**
@@ -1872,7 +1872,7 @@ class FrontendUI extends Module {
      */
     public function getUserStats(int $user_id): array {
         require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
-        return DataRepository::getUserStats($user_id);
+        return \MyProtector\Core\DataRepository::getUserStats($user_id);
     }
 
     /**
