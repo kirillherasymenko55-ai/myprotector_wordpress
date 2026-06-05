@@ -490,8 +490,8 @@ class FrontendUI extends Module {
         // Handle templates - use high priority to catch early
         add_filter('template_include', [$this, 'handleTemplateInclude'], 1);
 
-        // Override page content - use priority 20 to run after most themes
-        add_filter('the_content', [$this, 'overridePageContent'], 20);
+        // Disable content override - we use template_include instead
+        // add_filter('the_content', [$this, 'overridePageContent'], 20);
 
         // Flush once if needed
         if (get_option('mp_flush_rewrite_rules')) {
@@ -628,6 +628,11 @@ class FrontendUI extends Module {
         // Check for custom route via query var (for URLs like /?mp_page=home)
         if (!empty($mp_page)) {
             return $this->loadCustomTemplate($mp_page, $template);
+        }
+        
+        // Check for business profile page (has mp_slug)
+        if (!empty($mp_slug)) {
+            return $this->loadCustomTemplate('business', $template);
         }
         
         // Check if this is a WordPress page with one of our slugs
