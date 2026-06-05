@@ -481,10 +481,11 @@ class FrontendUI extends Module {
             error_log('[MyProtector] FrontendUI: setupRouting() called');
         }
         
-        // Register query vars early (priority 0)
+        // Register query vars immediately (not on hook, needs to be ready now)
         add_filter('query_vars', [$this, 'addQueryVars'], 0);
-
-        // Register rewrite rules on init (priority 0)
+        
+        // Call addRewriteRules immediately and also register for init
+        $this->addRewriteRules();
         add_action('init', [$this, 'addRewriteRules'], 0);
 
         // Handle templates - use high priority to catch early
@@ -492,14 +493,11 @@ class FrontendUI extends Module {
 
         // Disable content override - we use template_include instead
         // add_filter('the_content', [$this, 'overridePageContent'], 20);
-
+        
         // Flush once if needed
         if (get_option('mp_flush_rewrite_rules')) {
             delete_option('mp_flush_rewrite_rules');
-
-            add_action('init', function () {
-                flush_rewrite_rules();
-            }, 999);
+            flush_rewrite_rules();
         }
     }
     
@@ -633,6 +631,16 @@ class FrontendUI extends Module {
         // Check for business profile page (has mp_slug)
         if (!empty($mp_slug)) {
             return $this->loadCustomTemplate('business', $template);
+        }
+        
+        // Check if this is the front page (home page) - WordPress may use this for "home" page
+        if (is_front_page() || is_home()) {
+            // Check if there's a WordPress page named 'home' or if it's the default front page
+            if ($post && $post->post_name === 'home') {
+                return $this->loadCustomTemplate('home', $template);
+            }
+            // If no specific page but is front page, load our home template
+            return $this->loadCustomTemplate('home', $template);
         }
         
         // Check if this is a WordPress page with one of our slugs
