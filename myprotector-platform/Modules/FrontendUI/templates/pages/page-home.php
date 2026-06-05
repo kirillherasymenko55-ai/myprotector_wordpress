@@ -2,16 +2,16 @@
 /**
  * MyProtector Platform - Homepage Template
  * 
- * Uses WordPress theme header and footer
- * Full production-ready landing page
+ * Self-contained template with inline CSS loading
+ * No dependency on WordPress theme header/footer
  *
  * @package MyProtector\Modules\FrontendUI
  */
 
 if (!defined('ABSPATH')) exit;
 
-// Get theme header
-get_header();
+// Get plugin URL for assets
+$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
 // Get FrontendUI module instance for mock data
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
@@ -22,7 +22,19 @@ $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : ho
 $founder_name = defined('MYPROTECTOR_FOUNDER_NAME') ? MYPROTECTOR_FOUNDER_NAME : 'Adam Wyrzycki';
 $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDER_LINKEDIN : 'https://linkedin.com/in/adamwyrzycki';
 ?>
-
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
 <div class="mp-frontend-ui">
     <!-- Hero Section -->
     <section class="mp-hero">
@@ -280,9 +292,9 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
                 <?php foreach (array_slice($reviews, 0, 4) as $review): ?>
                 <div class="mp-review-card">
                     <div class="mp-review-header">
-                        <div class="mp-review-avatar"><?php echo esc_html(substr($review['author'], 0, 1)); ?></div>
+                        <div class="mp-review-avatar"><?php echo esc_html(substr($review['reviewer'] ?? 'U', 0, 1)); ?></div>
                         <div class="mp-review-meta">
-                            <h4 class="mp-review-author"><?php echo esc_html($review['author']); ?></h4>
+                            <h4 class="mp-review-author"><?php echo esc_html($review['reviewer'] ?? 'Anonymous'); ?></h4>
                             <span class="mp-review-date"><?php echo esc_html($review['date']); ?></span>
                         </div>
                         <div class="mp-review-rating">
@@ -357,7 +369,6 @@ $founder_linkedin = defined('MYPROTECTOR_FOUNDER_LINKEDIN') ? MYPROTECTOR_FOUNDE
         </div>
     </section>
 </div>
-
-<?php
-// Get theme footer
-get_footer();
+<?php wp_footer(); ?>
+</body>
+</html>

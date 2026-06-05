@@ -2,9 +2,9 @@
 /**
  * MyProtector Platform - Individual Dashboard Template
  * 
+ * Self-contained template with inline CSS loading
  * User dashboard with reviews, activity, and settings
  * Requires WordPress authentication
- * Uses WordPress theme header and footer
  *
  * @package MyProtector\Modules\FrontendUI
  */
@@ -19,15 +19,29 @@ if (!is_user_logged_in()) {
     exit;
 }
 
-get_header();
+// Get plugin URL for assets
+$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
 // Get FrontendUI module instance
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
 $current_user = wp_get_current_user();
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 $logout_url = wp_logout_url($company_url);
-
-// Get user's data
+?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php // Get user's data
 $user_id = get_current_user_id();
 $user_reviews = $frontend_ui->getMockData('reviews');
 $stats = [
@@ -281,5 +295,6 @@ $stats = [
 })(jQuery);
 </script>
 
-<?php
-get_footer();
+<?php wp_footer(); ?>
+</body>
+</html>
