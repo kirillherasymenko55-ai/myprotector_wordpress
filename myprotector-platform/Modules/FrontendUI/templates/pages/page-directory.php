@@ -157,7 +157,7 @@ $filter_status = isset($_GET['status']) ? sanitize_text_field($_GET['status']) :
                     </div>
                     
                     <div class="mp-business-card-footer">
-                        <span style="color: var(--mp-gray-500); font-size: var(--mp-font-size-sm);">
+                        <span class="mp-location">
                             📍 <?php echo esc_html($business['location']); ?>
                         </span>
                         <a href="<?php echo esc_url($company_url); ?>/business/<?php echo esc_attr($business['slug']); ?>" 

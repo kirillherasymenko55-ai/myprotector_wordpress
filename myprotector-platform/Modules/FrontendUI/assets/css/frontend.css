@@ -797,7 +797,12 @@ img {
 /* Emoji/Icon sizing in cards */
 .mp-business-card-footer span,
 .mp-business-card-footer .mp-emoji {
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.mp-business-card-footer .mp-location {
+    font-size: 13px;
+    color: var(--mp-gray-500);
 }
 
 /* ==========================================================================
