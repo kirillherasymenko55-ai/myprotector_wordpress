@@ -2,9 +2,9 @@
 /**
  * MyProtector Platform - Business Dashboard Template
  * 
+ * Self-contained template with inline CSS loading
  * Business owner dashboard with reviews, stats, and settings
  * Requires WordPress authentication and business role
- * Uses WordPress theme header and footer
  *
  * @package MyProtector\Modules\FrontendUI
  */
@@ -22,10 +22,25 @@ if (!is_user_logged_in()) {
     exit;
 }
 
-get_header();
+// Get plugin URL for assets
+$plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
 $current_user = wp_get_current_user();
-
+?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo esc_url($plugin_url . 'Modules/FrontendUI/assets/css/frontend.css'); ?>?ver=<?php echo MYPROTECTOR_VERSION; ?>">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php
 /**
  * ROLE CHECK (IMPORTANT FIX)
  */
@@ -506,5 +521,6 @@ if ($frontend_ui && method_exists($frontend_ui, 'getMockData')) {
 })(jQuery);
 </script>
 
-<?php
-get_footer();
+<?php wp_footer(); ?>
+</body>
+</html>
