@@ -705,6 +705,10 @@ class Activator {
         
         // Seed email templates
         $this->seedEmailTemplates();
+        
+        // Seed demo data (users, businesses, reviews)
+        require_once MYPROTECTOR_PATH . 'Core/DataSeeder.php';
+        \MyProtector\Core\DataSeeder::seed();
     }
 
     /**
