@@ -503,6 +503,14 @@ img {
     color: var(--mp-primary);
 }
 
+/* Custom Logo Image */
+.mp-logo-image {
+    height: 40px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+}
+
 /* Navigation */
 .mp-nav {
     display: flex;
