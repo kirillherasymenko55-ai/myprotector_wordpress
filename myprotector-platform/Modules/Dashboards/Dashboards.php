@@ -139,19 +139,8 @@ class Dashboards extends Module {
      * @return void
      */
     public function addDashboardRewriteRules(): void {
-        // Individual dashboard
-        add_rewrite_rule(
-            '^dashboard/?$',
-            'index.php?mp_dashboard_type=individual&mp_dashboard_page=overview',
-            'top'
-        );
-        
-        // Dashboard with page
-        add_rewrite_rule(
-            '^dashboard/([a-z-]+)/?$',
-            'index.php?mp_dashboard_type=individual&mp_dashboard_page=$matches[1]',
-            'top'
-        );
+        // Note: Individual dashboard (/dashboard) is handled by FrontendUI module
+        // This module only handles business-dashboard and reseller-dashboard
         
         // Business dashboard
         add_rewrite_rule(
@@ -176,19 +165,6 @@ class Dashboards extends Module {
         add_rewrite_rule(
             '^reseller-dashboard/([a-z-]+)/?$',
             'index.php?mp_dashboard_type=reseller&mp_dashboard_page=$matches[1]',
-            'top'
-        );
-        
-        // Support dashboard
-        add_rewrite_rule(
-            '^support-dashboard/?$',
-            'index.php?mp_dashboard_type=support&mp_dashboard_page=tickets',
-            'top'
-        );
-        
-        add_rewrite_rule(
-            '^support-dashboard/([a-z-]+)/?$',
-            'index.php?mp_dashboard_type=support&mp_dashboard_page=$matches[1]',
             'top'
         );
     }
@@ -256,6 +232,11 @@ class Dashboards extends Module {
         $type = get_query_var('mp_dashboard_type');
         
         if (empty($type)) {
+            return;
+        }
+        
+        // Skip individual - it's handled by FrontendUI module
+        if ($type === 'individual') {
             return;
         }
         
