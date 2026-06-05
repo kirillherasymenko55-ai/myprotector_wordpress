@@ -1810,16 +1810,69 @@ class FrontendUI extends Module {
     }
 
     /**
-     * Get mock data
+     * Get mock data (now returns real database data)
      * 
      * @param string $key
      * @return mixed
      */
     public function getMockData(string $key = null) {
-        if ($key === null) {
-            return $this->mock_data;
+        // Use DataRepository for real database data
+        require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
+        
+        switch ($key) {
+            case 'businesses':
+                return DataRepository::getBusinesses();
+                
+            case 'reviews':
+                return DataRepository::getRecentReviews(20);
+                
+            case 'categories':
+                return DataRepository::getCategories();
+                
+            case 'stats':
+                return DataRepository::getStats();
+                
+            default:
+                // Return real data for any key
+                $data = [];
+                $data['businesses'] = DataRepository::getBusinesses();
+                $data['reviews'] = DataRepository::getRecentReviews(20);
+                $data['categories'] = DataRepository::getCategories();
+                $data['stats'] = DataRepository::getStats();
+                return $data[$key] ?? $data;
         }
-        return $this->mock_data[$key] ?? null;
+    }
+    
+    /**
+     * Get businesses from database
+     */
+    public function getBusinesses(array $args = []): array {
+        require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
+        return DataRepository::getBusinesses($args);
+    }
+    
+    /**
+     * Get business by slug
+     */
+    public function getBusinessBySlug(string $slug): ?array {
+        require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
+        return DataRepository::getBusinessBySlug($slug);
+    }
+    
+    /**
+     * Get reviews for a business
+     */
+    public function getReviewsByBusiness(int $business_id, int $limit = 10): array {
+        require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
+        return DataRepository::getReviewsByBusiness($business_id, $limit);
+    }
+    
+    /**
+     * Get user stats for dashboard
+     */
+    public function getUserStats(int $user_id): array {
+        require_once MYPROTECTOR_PATH . 'Core/DataRepository.php';
+        return DataRepository::getUserStats($user_id);
     }
 
     /**

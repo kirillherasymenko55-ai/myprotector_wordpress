@@ -45,15 +45,11 @@ $logout_url = wp_logout_url($company_url);
 <?php include $frontend_ui->getPath('templates/components/header.php'); ?>
 
 <main class="mp-frontend-ui">
-<?php // Get user's data
+<?php
+// Get user stats from database
 $user_id = get_current_user_id();
+$stats = $frontend_ui->getUserStats($user_id);
 $user_reviews = $frontend_ui->getMockData('reviews');
-$stats = [
-    'total_reviews' => count($user_reviews),
-    'helpful_votes' => 45,
-    'trust_score' => 92,
-    'member_since' => 'January 2025'
-];
 ?>
 
 <div class="mp-frontend-ui">

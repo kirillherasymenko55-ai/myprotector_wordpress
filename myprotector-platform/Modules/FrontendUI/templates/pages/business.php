@@ -15,21 +15,13 @@ $plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FI
 
 // Get FrontendUI module instance
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
-$businesses = $frontend_ui->getMockData('businesses');
-$reviews = $frontend_ui->getMockData('reviews');
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
 
 // Get business slug from query var
 $business_slug = get_query_var('mp_slug');
 
-// Find business by slug
-$business = null;
-foreach ($businesses as $b) {
-    if ($b['slug'] === $business_slug) {
-        $business = $b;
-        break;
-    }
-}
+// Get business from database
+$business = $frontend_ui->getBusinessBySlug($business_slug);
 
 // If business not found, show 404
 if (!$business) {
@@ -37,12 +29,7 @@ if (!$business) {
 }
 
 // Get reviews for this business
-$business_reviews = [];
-foreach ($reviews as $review) {
-    if ($review['business_id'] == $business['id']) {
-        $business_reviews[] = $review;
-    }
-}
+$business_reviews = $frontend_ui->getReviewsByBusiness($business['id'], 20);
 
 // Trust status colors
 $trust_colors = [

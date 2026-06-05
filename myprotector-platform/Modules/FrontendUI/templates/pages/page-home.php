@@ -13,9 +13,11 @@ if (!defined('ABSPATH')) exit;
 // Get plugin URL for assets
 $plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
-// Get FrontendUI module instance for mock data
+// Get FrontendUI module instance
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
-$businesses = $frontend_ui->getMockData('businesses');
+
+// Use real database data via FrontendUI
+$businesses = $frontend_ui->getBusinesses();
 $stats = $frontend_ui->getMockData('stats');
 $reviews = $frontend_ui->getMockData('reviews');
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();

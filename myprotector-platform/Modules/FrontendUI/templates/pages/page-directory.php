@@ -13,13 +13,23 @@ if (!defined('ABSPATH')) exit;
 // Get plugin URL for assets
 $plugin_url = defined('MYPROTECTOR_URL') ? MYPROTECTOR_URL : plugin_dir_url(__FILE__);
 
-// Get FrontendUI module instance for mock data
+// Get FrontendUI module instance
 $frontend_ui = MyProtector\Modules\FrontendUI\FrontendUI::getInstance();
-$businesses = $frontend_ui->getMockData('businesses');
-$categories = $frontend_ui->getMockData('categories');
+
+// Use real database data via FrontendUI
+$businesses = $frontend_ui->getBusinesses();
 $company_url = defined('MYPROTECTOR_COMPANY_URL') ? MYPROTECTOR_COMPANY_URL : home_url();
-$search_query = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
-$filter_status = isset($_GET['status']) ? sanitize_text_field($_GET['status']) : 'all';
+
+// Get search and filter from URL params
+$search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+$status_filter = isset($_GET['status']) ? sanitize_text_field($_GET['status']) : 'all';
+
+// Filter businesses based on search
+if (!empty($search)) {
+    $businesses = array_filter($businesses, function($b) use ($search) {
+        return stripos($b['name'], $search) !== false || stripos($b['description'], $search) !== false;
+    });
+}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
